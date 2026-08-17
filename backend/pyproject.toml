@@ -1,0 +1,23 @@
+[build-system]
+requires = ["uv_build >= 0.12.1, <0.13.0"]
+build-backend = "uv_build"
+
+[project]
+dynamic = ["version"]
+name = "myTomorrows_a2"
+dependencies = [
+    "httpx",
+    "fastapi",
+    "uvicorn",
+    "sqlalchemy",
+    "pydantic",
+    "pydantic-settings",
+    "pymysql",
+    "python-dotenv",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "ruff",
+]
