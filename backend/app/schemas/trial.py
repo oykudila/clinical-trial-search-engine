@@ -1,5 +1,5 @@
 from enum import Enum
-from dataclasses import Field
+from pydantic import Field
 from app.schemas.base import ApiBaseModel
 
 
@@ -33,8 +33,8 @@ class Trial(ApiBaseModel):
     nct_id: str = Field(min_length=11, max_length=11)
     brief_title: str
     overall_status: OverallStatus
-    phases: list[Phases]
     conditions: list[str]
+    phases: list[Phases]
     interventions: list[str]
 
 
