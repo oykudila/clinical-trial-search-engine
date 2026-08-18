@@ -1,0 +1,18 @@
+import base64
+from pydantic import BaseModel
+
+
+class CursorPayload(BaseModel):
+    search_term: str | None
+    filters: dict
+    ct_token: str
+
+
+def encode_cursor(payload: CursorPayload) -> str:
+    raw = payload.model_dump_json().encode("utf-8")
+    return base64.urlsafe_b64encode(raw).decode("utf-8")
+
+
+def decode_cursor(token: str) -> CursorPayload:
+    raw = base64.urlsafe_b64decode(token.encode("utf-8"))
+    return CursorPayload.model_validate_json(raw)
