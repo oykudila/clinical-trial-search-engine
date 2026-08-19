@@ -41,4 +41,4 @@ class Trial(ApiBaseModel):
 class PaginatedTrials(ApiBaseModel):
     trials: list[Trial]
     next_cursor: str | None
-    total_count: int
+    total_count: int | None

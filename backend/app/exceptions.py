@@ -4,3 +4,7 @@ class UpstreamUnavailableError(Exception):
 
 class UpstreamDataError(Exception):
     pass
+
+
+class TrialNotFoundError(Exception):
+    pass

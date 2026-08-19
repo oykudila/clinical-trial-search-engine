@@ -2,10 +2,21 @@ import httpx
 from typing import NamedTuple
 from app.config import settings
 from app.schemas.trial import Trial
-from app.exceptions import UpstreamDataError, UpstreamUnavailableError
+from app.exceptions import (
+    UpstreamDataError,
+    UpstreamUnavailableError,
+    TrialNotFoundError,
+)
 
 
-def _map_trial(raw: dict) -> Trial:
+def _parse_json(response: httpx.Response) -> dict:
+    try:
+        return response.json()
+    except ValueError as exc:
+        raise UpstreamDataError("upstream returned invalid JSON") from exc
+
+
+def map_trial(raw: dict) -> Trial:
     protocol_section = raw.get("protocolSection", {})
     identification_module = protocol_section.get("identificationModule", {})
     status_module = protocol_section.get("statusModule", {})
@@ -26,8 +37,28 @@ def _map_trial(raw: dict) -> Trial:
     )
 
 
+async def fetch_trial_by_id(client: httpx.AsyncClient, nct_id: str) -> dict:
+    try:
+        response = await client.get(
+            f"{settings.clinicaltrials_base_url}/studies/{nct_id}"
+        )
+        response.raise_for_status()
+    except httpx.HTTPStatusError as exc:
+        if exc.response.status_code == 404:
+            raise TrialNotFoundError(f"{nct_id} not found") from exc
+        raise UpstreamUnavailableError(
+            f"upstream returned {exc.response.status_code}"
+        ) from exc
+    except httpx.RequestError as exc:
+        raise UpstreamUnavailableError("could not reach upstream") from exc
+
+    data = _parse_json(response)
+    if "protocolSection" not in data:
+        raise UpstreamDataError("upstream response is missing expected fields")
+    return data
+
+
 async def fetch_trials(client: httpx.AsyncClient, params: dict) -> dict:
-    # Upstream check
     try:
         response = await client.get(
             f"{settings.clinicaltrials_base_url}/studies", params=params
@@ -40,12 +71,7 @@ async def fetch_trials(client: httpx.AsyncClient, params: dict) -> dict:
     except httpx.RequestError as exc:
         raise UpstreamUnavailableError("could not reach upstream") from exc
 
-    # Sanity check
-    try:
-        data = response.json()
-    except ValueError as exc:
-        raise UpstreamDataError("upstream returned invalid JSON") from exc
-
+    data = _parse_json(response)
     if "studies" not in data and "totalCount" not in data:
         raise UpstreamDataError("upstream response is missing expected fields")
 
@@ -54,14 +80,14 @@ async def fetch_trials(client: httpx.AsyncClient, params: dict) -> dict:
 
 class CollectedBatch(NamedTuple):
     trials: list[Trial]
-    total: int
+    total: int | None
     next_token: str | None
 
 
-def _process(raw: dict) -> CollectedBatch:
-    trials = [_map_trial(study) for study in raw.get("studies", [])]
+def collect_trials(raw: dict) -> CollectedBatch:
+    trials = [map_trial(study) for study in raw.get("studies", [])]
     return CollectedBatch(
         trials=trials,
-        total=raw.get("totalCount", 0),
+        total=raw.get("totalCount"),
         next_token=raw.get("nextPageToken"),
     )

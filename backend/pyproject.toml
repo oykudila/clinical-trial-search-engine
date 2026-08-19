@@ -3,8 +3,8 @@ requires = ["uv_build >= 0.12.1, <0.13.0"]
 build-backend = "uv_build"
 
 [project]
-dynamic = ["version"]
 name = "myTomorrows_a2"
+version = "0.1.0"
 dependencies = [
     "httpx",
     "fastapi",
@@ -21,3 +21,6 @@ dev = [
     "pytest",
     "ruff",
 ]
+
+[tool.uv]
+package = false
