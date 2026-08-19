@@ -1,12 +1,14 @@
-import httpx
 from typing import NamedTuple
+
+import httpx
+
 from app.config import settings
-from app.schemas.trial import Trial
 from app.exceptions import (
+    TrialNotFoundError,
     UpstreamDataError,
     UpstreamUnavailableError,
-    TrialNotFoundError,
 )
+from app.schemas.trial import Trial
 
 
 def _parse_json(response: httpx.Response) -> dict:

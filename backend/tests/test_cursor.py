@@ -1,4 +1,4 @@
-from app.cursor import CursorPayload, encode_cursor, decode_cursor, resolve_ct_token
+from app.cursor import CursorPayload, decode_cursor, encode_cursor, resolve_ct_token
 
 
 def test_encode_decode_round_trip():

@@ -1,15 +1,13 @@
 import httpx
-
 from fastapi import APIRouter, Depends, Path
-
-from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
-from app.database import get_db
-from app.models import Favorite
-from app.dependencies import get_http_client
-from app.schemas.favorite import FavoriteCreate
 from app.clients.clinicaltrials import collect_trials, fetch_trial_by_id, fetch_trials
+from app.database import get_db
+from app.dependencies import get_http_client
+from app.models import Favorite
+from app.schemas.favorite import FavoriteCreate
 from app.schemas.trial import Trial
 
 router = APIRouter(prefix="/favorites", tags=["favorites"])

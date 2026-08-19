@@ -1,18 +1,18 @@
-import httpx
-
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 
+import httpx
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+
 from app.database import Base, engine
-from app.routers.trials import router as trials_router
-from app.routers.favorites import router as favorites_router
-from app.schemas.error import ApiError
 from app.exceptions import (
     TrialNotFoundError,
     UpstreamDataError,
     UpstreamUnavailableError,
 )
+from app.routers.favorites import router as favorites_router
+from app.routers.trials import router as trials_router
+from app.schemas.error import ApiError
 
 
 @asynccontextmanager

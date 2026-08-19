@@ -1,11 +1,10 @@
 import httpx
-from fastapi import APIRouter, Query, Depends
+from fastapi import APIRouter, Depends, Query
 
-
-from app.dependencies import get_http_client
-from app.schemas.trial import PaginatedTrials, OverallStatus, Phases
 from app.clients.clinicaltrials import collect_trials, fetch_trials
-from app.cursor import resolve_ct_token, CursorPayload, encode_cursor
+from app.cursor import CursorPayload, encode_cursor, resolve_ct_token
+from app.dependencies import get_http_client
+from app.schemas.trial import OverallStatus, PaginatedTrials, Phases
 
 router = APIRouter(prefix="/trials", tags=["trials"])
 
