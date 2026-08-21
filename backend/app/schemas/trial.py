@@ -5,7 +5,7 @@ from pydantic import Field
 from app.schemas.base import ApiBaseModel
 
 
-class Phases(str, Enum):
+class Phase(str, Enum):
     NA = "NA"
     EARLY_PHASE1 = "EARLY_PHASE1"
     PHASE1 = "PHASE1"
@@ -36,7 +36,7 @@ class Trial(ApiBaseModel):
     brief_title: str
     overall_status: OverallStatus
     conditions: list[str]
-    phases: list[Phases]
+    phases: list[Phase]
     interventions: list[str]
 
 

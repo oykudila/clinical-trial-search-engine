@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Query
 from app.clients.clinicaltrials import collect_trials, fetch_trials
 from app.cursor import CursorPayload, encode_cursor, resolve_ct_token
 from app.dependencies import get_http_client
-from app.schemas.trial import OverallStatus, PaginatedTrials, Phases
+from app.schemas.trial import OverallStatus, PaginatedTrials, Phase
 
 router = APIRouter(prefix="/trials", tags=["trials"])
 
@@ -14,7 +14,7 @@ async def list_trials(
     search: str | None = Query(None),
     condition: str | None = Query(None),
     status: OverallStatus | None = Query(None),
-    phase: Phases | None = Query(None),
+    phase: Phase | None = Query(None),
     cursor: str | None = Query(None),
     limit: int = Query(10, ge=1, le=1000),
     client: httpx.AsyncClient = Depends(get_http_client),
