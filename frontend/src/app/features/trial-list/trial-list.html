@@ -1,0 +1,13 @@
+@if (state.isLoading()) {
+  <p>Loading...</p>
+} @else if (state.error()) {
+  <p>Something went wrong: {{ state.error()?.message }}</p>
+} @else {
+  <ul>
+    @for (trial of state.trials(); track trial.nctId) {
+      <li>{{ trial.briefTitle }}</li>
+    } @empty {
+      <li>No trials found.</li>
+    }
+  </ul>
+}
