@@ -1,4 +1,19 @@
 <input type="text" (input)="searchInput($event)" placeholder="Search..." />
+
+<input type="text" (input)="conditionInput($event)" placeholder="Search condition..." />
+<select (change)="statusChange($event)">
+  <option value="">Any status</option>
+  @for (status of statuses; track status) {
+    <option [value]="status">{{ status }}</option>
+  }
+</select>
+<select (change)="phaseChange($event)">
+  <option value="">Any phase</option>
+  @for (phase of phases; track phase) {
+    <option [value]="phase">{{ phase }}</option>
+  }
+</select>
+
 @if (state.isLoading()) {
   <p>Loading...</p>
 } @else if (state.error()) {

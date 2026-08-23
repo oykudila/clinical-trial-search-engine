@@ -1,38 +1,35 @@
-export type OverallStatus =
-    | 'ACTIVE_NOT_RECRUITING'
-    | 'COMPLETED'
-    | 'ENROLLING_BY_INVITATION'
-    | 'NOT_YET_RECRUITING'
-    | 'RECRUITING'
-    | 'SUSPENDED'
-    | 'TERMINATED'
-    | 'WITHDRAWN'
-    | 'AVAILABLE'
-    | 'NO_LONGER_AVAILABLE'
-    | 'TEMPORARILY_NOT_AVAILABLE'
-    | 'APPROVED_FOR_MARKETING'
-    | 'WITHHELD'
-    | 'UNKNOWN';
+export const OVERALL_STATUSES = [
+  'ACTIVE_NOT_RECRUITING',
+  'COMPLETED',
+  'ENROLLING_BY_INVITATION',
+  'NOT_YET_RECRUITING',
+  'RECRUITING',
+  'SUSPENDED',
+  'TERMINATED',
+  'WITHDRAWN',
+  'AVAILABLE',
+  'NO_LONGER_AVAILABLE',
+  'TEMPORARILY_NOT_AVAILABLE',
+  'APPROVED_FOR_MARKETING',
+  'WITHHELD',
+  'UNKNOWN',
+] as const;
+export type OverallStatus = (typeof OVERALL_STATUSES)[number];
 
-export type Phase =
-    | 'NA'
-    | 'EARLY_PHASE1'
-    | 'PHASE1'
-    | 'PHASE2'
-    | 'PHASE3'
-    | 'PHASE4';
+export const PHASES = ['NA', 'EARLY_PHASE1', 'PHASE1', 'PHASE2', 'PHASE3', 'PHASE4'] as const;
+export type Phase = (typeof PHASES)[number];
 
 export interface Trial {
-    nctId: string;
-    briefTitle: string;
-    overallStatus: OverallStatus;
-    conditions: string[];
-    phases: Phase[]
-    interventions: string[];
+  nctId: string;
+  briefTitle: string;
+  overallStatus: OverallStatus;
+  conditions: string[];
+  phases: Phase[];
+  interventions: string[];
 }
 
 export interface PaginatedTrials {
-    trials: Trial[];
-    nextCursor: string | null;
-    totalCount: number | null;
+  trials: Trial[];
+  nextCursor: string | null;
+  totalCount: number | null;
 }
