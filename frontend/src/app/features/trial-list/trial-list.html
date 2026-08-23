@@ -1,3 +1,4 @@
+<input type="text" (input)="searchInput($event)" placeholder="Search..." />
 @if (state.isLoading()) {
   <p>Loading...</p>
 } @else if (state.error()) {

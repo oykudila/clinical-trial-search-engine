@@ -8,5 +8,10 @@ import { TrialsState } from '../../core/trials-state';
   templateUrl: './trial-list.html',
 })
 export class TrialList {
-  protected state = inject(TrialsState)
+  protected state = inject(TrialsState);
+
+  protected searchInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.state.setSearch(value);
+  }
 }
