@@ -1,0 +1,13 @@
+@if (state.error()) {
+  <p>{{ state.error()?.message }}</p>
+}
+<ul>
+  @for (trial of state.favorites(); track trial.nctId) {
+    <li>
+      {{ trial.briefTitle }}
+      <button (click)="state.toggleFavorite(trial)">Remove</button>
+    </li>
+  } @empty {
+    <li>You can view your favorited trials here.</li>
+  }
+</ul>
