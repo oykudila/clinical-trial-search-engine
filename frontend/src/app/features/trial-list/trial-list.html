@@ -10,10 +10,14 @@
   <input
     type="text"
     (input)="conditionInput($event)"
-    placeholder="Search condition..."
+    placeholder="e.g. lung cancer or (head OR neck) AND pain"
     aria-label="Filter by condition"
-    class="input"
+    class="input input--wide"
+    [attr.aria-invalid]="conditionError() ? true : null"
   />
+  @if (conditionError()) {
+    <p role="alert" class="status-message status-message--error">{{ conditionError() }}</p>
+  }
   <select (change)="statusChange($event)" aria-label="Filter by status" class="select">
     <option value="">Any status</option>
     @for (status of statuses; track status) {

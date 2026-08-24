@@ -18,6 +18,11 @@
   min-width: 160px;
 }
 
+.input--wide {
+  flex: 2;
+  min-width: 280px;
+}
+
 .favorite-button {
   background: none;
   border: none;

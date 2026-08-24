@@ -27,14 +27,36 @@ export class TrialList implements OnDestroy {
   // --- filters ---
   protected readonly statuses = OVERALL_STATUSES;
   protected readonly phases = PHASES;
+  protected conditionError = signal<string | null>(null);
+  private readonly maxConditionLength = 100;
 
   protected condition = signal<string | undefined>(undefined);
   protected status = signal<OverallStatus | undefined>(undefined);
   protected phase = signal<Phase | undefined>(undefined);
 
   protected conditionInput(event: Event): void {
-    this.condition.set((event.target as HTMLInputElement).value || undefined);
+    const value = (event.target as HTMLInputElement).value;
+    if (value.length > this.maxConditionLength) {
+      this.conditionError.set(`Condition must be ${this.maxConditionLength} characters or fewer.`);
+      return;
+    }
+    if (!this.isBalanced(value)) {
+      this.conditionError.set('Condition has unbalanced parentheses.');
+      return;
+    }
+    this.conditionError.set(null);
+    this.condition.set(value || undefined);
     this.updatedFilters();
+  }
+
+  private isBalanced(value: string): boolean {
+    let depth = 0;
+    for (const char of value) {
+      if (char === '(') depth++;
+      if (char === ')') depth--;
+      if (depth < 0) return false;
+    }
+    return depth === 0;
   }
   protected statusChange(event: Event): void {
     const statusValue = (event.target as HTMLSelectElement).value;
