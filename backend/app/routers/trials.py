@@ -4,12 +4,22 @@ from fastapi import APIRouter, Depends, Query
 from app.clients.clinicaltrials import collect_trials, fetch_trials
 from app.cursor import CursorPayload, encode_cursor, resolve_ct_token
 from app.dependencies import get_http_client
+from app.schemas.error import ApiError
 from app.schemas.trial import OverallStatus, PaginatedTrials, Phase
 
 router = APIRouter(prefix="/trials", tags=["trials"])
 
 
-@router.get("", response_model=PaginatedTrials)
+@router.get(
+    "",
+    response_model=PaginatedTrials,
+    responses={
+        502: {
+            "model": ApiError,
+            "description": "ClinicalTrials.gov is unavailable or returned invalid data",
+        }
+    },
+)
 async def list_trials(
     search: str | None = Query(None),
     condition: str | None = Query(None),
