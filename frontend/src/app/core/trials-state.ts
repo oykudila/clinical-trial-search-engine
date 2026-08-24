@@ -85,11 +85,11 @@ export class TrialsState {
         }),
       );
     }),
-    scan(
-      (accumulated, result) =>
-        result.isReset ? result.trials : [...accumulated, ...result.trials],
-      [] as Trial[],
-    ),
+    scan((accumulated, result) => {
+      if (result.isReset) return result.trials;
+      if (result.trials.length === 0) return accumulated;
+      return [...accumulated, ...result.trials];
+    }, [] as Trial[]),
   );
 
   trials = toSignal(this.trials$, { initialValue: [] });
