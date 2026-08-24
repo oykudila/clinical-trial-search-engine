@@ -14,9 +14,9 @@
   }
 </select>
 
-@if (state.isLoading()) {
+@if (state.isLoading() && state.trials().length === 0) {
   <p>Loading...</p>
-} @else if (state.error()) {
+} @else if (state.error() && state.trials().length === 0) {
   <p>Something went wrong: {{ state.error()?.message }}</p>
 } @else {
   <ul>
@@ -26,4 +26,5 @@
       <li>No trials found.</li>
     }
   </ul>
+  <div #scrollSentinel class="scroll-sentinel"></div>
 }
