@@ -1,6 +1,7 @@
 from typing import NamedTuple
 
 import httpx
+from pydantic import ValidationError
 
 from app.config import settings
 from app.exceptions import (
@@ -27,17 +28,20 @@ def map_trial(raw: dict) -> Trial:
     design_module = protocol_section.get("designModule", {})
     arms_module = protocol_section.get("armsInterventionsModule", {})
 
-    return Trial(
-        nct_id=identification_module.get("nctId") or "",
-        brief_title=identification_module.get("briefTitle") or "",
-        overall_status=status_module.get("overallStatus") or "UNKNOWN",
-        conditions=conditions_module.get("conditions") or [],
-        phases=design_module.get("phases") or [],
-        interventions=[
-            intervention.get("name") or ""
-            for intervention in (arms_module.get("interventions") or [])
-        ],
-    )
+    try:
+        return Trial(
+            nct_id=identification_module.get("nctId") or "",
+            brief_title=identification_module.get("briefTitle") or "",
+            overall_status=status_module.get("overallStatus") or "UNKNOWN",
+            conditions=conditions_module.get("conditions") or [],
+            phases=design_module.get("phases") or [],
+            interventions=[
+                intervention.get("name") or ""
+                for intervention in (arms_module.get("interventions") or [])
+            ],
+        )
+    except ValidationError as exc:
+        raise UpstreamDataError("upstream returned an unexpected trial shape") from exc
 
 
 async def fetch_trial_by_id(client: httpx.AsyncClient, nct_id: str) -> dict:
