@@ -8,3 +8,7 @@ class UpstreamDataError(Exception):
 
 class TrialNotFoundError(Exception):
     pass
+
+
+class UpstreamRateLimitedError(Exception):
+    pass

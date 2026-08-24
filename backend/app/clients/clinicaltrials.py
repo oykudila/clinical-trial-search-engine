@@ -6,6 +6,7 @@ from app.config import settings
 from app.exceptions import (
     TrialNotFoundError,
     UpstreamDataError,
+    UpstreamRateLimitedError,
     UpstreamUnavailableError,
 )
 from app.schemas.trial import Trial
@@ -46,6 +47,8 @@ async def fetch_trial_by_id(client: httpx.AsyncClient, nct_id: str) -> dict:
         )
         response.raise_for_status()
     except httpx.HTTPStatusError as exc:
+        if exc.response.status_code == 429:
+            raise UpstreamRateLimitedError("upstream rate limit exceeded") from exc
         if exc.response.status_code == 404:
             raise TrialNotFoundError(f"{nct_id} not found") from exc
         raise UpstreamUnavailableError(
@@ -67,6 +70,8 @@ async def fetch_trials(client: httpx.AsyncClient, params: dict) -> dict:
         )
         response.raise_for_status()
     except httpx.HTTPStatusError as exc:
+        if exc.response.status_code == 429:
+            raise UpstreamRateLimitedError("upstream rate limit exceeded") from exc
         raise UpstreamUnavailableError(
             f"upstream returned {exc.response.status_code}"
         ) from exc
