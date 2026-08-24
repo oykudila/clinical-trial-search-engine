@@ -43,7 +43,7 @@ async def handle_upstream_unavailable(request: Request, exc: UpstreamUnavailable
     return JSONResponse(
         status_code=502,
         content=ApiError(
-            code="UPSTREAM_UNAVAILABLE", message="Cannot reach the server."
+            code="UPSTREAM_UNAVAILABLE", message="cannot reach the server."
         ).model_dump(by_alias=True),
     )
 
@@ -54,7 +54,7 @@ async def handle_upstream_rate_limited(request: Request, exc: UpstreamRateLimite
         status_code=503,
         content=ApiError(
             code="UPSTREAM_RATE_LIMITED",
-            message="Too many requests right now, please wait a moment and try again.",
+            message="too many requests, please refresh the page and try again.",
         ).model_dump(by_alias=True),
     )
 

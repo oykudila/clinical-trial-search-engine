@@ -28,14 +28,14 @@ def map_trial(raw: dict) -> Trial:
     arms_module = protocol_section.get("armsInterventionsModule", {})
 
     return Trial(
-        nct_id=identification_module.get("nctId", ""),
-        brief_title=identification_module.get("briefTitle", ""),
-        overall_status=status_module.get("overallStatus", "UNKNOWN"),
-        conditions=conditions_module.get("conditions", []),
-        phases=design_module.get("phases", []),
+        nct_id=identification_module.get("nctId") or "",
+        brief_title=identification_module.get("briefTitle") or "",
+        overall_status=status_module.get("overallStatus") or "UNKNOWN",
+        conditions=conditions_module.get("conditions") or [],
+        phases=design_module.get("phases") or [],
         interventions=[
-            intervention.get("name")
-            for intervention in arms_module.get("interventions", [])
+            intervention.get("name") or ""
+            for intervention in (arms_module.get("interventions") or [])
         ],
     )
 
