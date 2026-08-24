@@ -1,13 +1,19 @@
 @if (state.error()) {
-  <p>{{ state.error()?.message }}</p>
+  <p role="alert" class="status-message status-message--error">{{ state.error()?.message }}</p>
 }
-<ul>
+<ul class="trial-list" aria-label="Favorited trials">
   @for (trial of state.favorites(); track trial.nctId) {
-    <li>
-      {{ trial.briefTitle }}
-      <button (click)="state.toggleFavorite(trial)">Remove</button>
+    <li class="trial-card">
+      <span class="trial-card__title">{{ trial.briefTitle }}</span>
+      <button
+        class="remove-button"
+        (click)="state.toggleFavorite(trial)"
+        [attr.aria-label]="'Remove ' + trial.briefTitle + ' from favorites'"
+      >
+        Remove
+      </button>
     </li>
   } @empty {
-    <li>You can view your favorited trials here.</li>
+    <li class="trial-card">You can view your favorited trials here.</li>
   }
 </ul>

@@ -1,0 +1,12 @@
+.remove-button {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.remove-button:hover {
+  border-color: var(--color-error);
+  color: var(--color-error);
+}

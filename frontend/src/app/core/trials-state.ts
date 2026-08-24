@@ -65,6 +65,7 @@ export class TrialsState {
     map(() => ({ type: 'loadMore' as const })),
   );
 
+  private readonly pageSize = 40;
   private trials$ = merge(this.resetEvents$, this.loadMoreEvents$).pipe(
     tap(() => {
       this.isLoadingSignal.set(true);
@@ -72,7 +73,7 @@ export class TrialsState {
     }),
     switchMap((event) => {
       const cursor = event.type === 'reset' ? null : this.nextCursor;
-      return this.api.getTrials(this.currentTerm, this.currentFilters, cursor, 10).pipe(
+      return this.api.getTrials(this.currentTerm, this.currentFilters, cursor, this.pageSize).pipe(
         tap((response) => {
           this.isLoadingSignal.set(false);
           this.nextCursor = response.nextCursor;

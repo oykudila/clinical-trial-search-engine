@@ -15,11 +15,11 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       } else {
         normalized = {
           code: 'UPSTREAM_UNAVAILABLE',
-          message: 'Cannot reach the server, please try again.',
+          message: 'cannot reach the server, please refresh the page.',
         };
       }
 
       return throwError(() => normalized);
-    })
+    }),
   );
 };

@@ -12,8 +12,12 @@ import { FavoritesState } from '../../core/favorites-state';
 })
 export class TrialList implements OnDestroy {
   protected state = inject(TrialsState);
-  protected favoritesState = inject(FavoritesState);
 
+  // --- favorites ---
+  protected favoritesState = inject(FavoritesState);
+  protected isFavorited(nctId: string): boolean {
+    return this.favoritesState.favoriteIds().has(nctId);
+  }
   // --- search ---
   protected searchInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;

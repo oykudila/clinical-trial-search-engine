@@ -1,37 +1,62 @@
-<input type="text" (input)="searchInput($event)" placeholder="Search..." />
+<div class="controls">
+  <input
+    type="text"
+    (input)="searchInput($event)"
+    placeholder="Search..."
+    aria-label="Search trials"
+    class="input"
+  />
 
-<input type="text" (input)="conditionInput($event)" placeholder="Search condition..." />
-<select (change)="statusChange($event)">
-  <option value="">Any status</option>
-  @for (status of statuses; track status) {
-    <option [value]="status">{{ status }}</option>
-  }
-</select>
-<select (change)="phaseChange($event)">
-  <option value="">Any phase</option>
-  @for (phase of phases; track phase) {
-    <option [value]="phase">{{ phase }}</option>
-  }
-</select>
+  <input
+    type="text"
+    (input)="conditionInput($event)"
+    placeholder="Search condition..."
+    aria-label="Filter by condition"
+    class="input"
+  />
+  <select (change)="statusChange($event)" aria-label="Filter by status" class="select">
+    <option value="">Any status</option>
+    @for (status of statuses; track status) {
+      <option [value]="status">{{ status }}</option>
+    }
+  </select>
+  <select (change)="phaseChange($event)" aria-label="Filter by phase" class="select">
+    <option value="">Any phase</option>
+    @for (phase of phases; track phase) {
+      <option [value]="phase">{{ phase }}</option>
+    }
+  </select>
+</div>
 
 @if (state.isLoading() && state.trials().length === 0) {
-  <p>Loading...</p>
+  <p i18n role="status" class="status-message">Loading...</p>
 } @else if (state.error() && state.trials().length === 0) {
-  <p>Something went wrong: {{ state.error()?.message }}</p>
+  <p role="alert" class="status-message status-message--error">
+    Something went wrong: {{ state.error()?.message }}
+  </p>
 } @else {
   @if (favoritesState.error()) {
-    <p>{{ favoritesState.error()?.message }}</p>
+    <p role="alert" class="status-message status-message--error">
+      {{ favoritesState.error()?.message }}
+    </p>
   }
-  <ul>
+  <ul class="trial-list" aria-label="Trial results">
     @for (trial of state.trials(); track trial.nctId) {
-      <li>
-        {{ trial.briefTitle }}
-        <button (click)="favoritesState.toggleFavorite(trial)">
-          {{ favoritesState.favoriteIds().has(trial.nctId) ? '★' : '☆' }}
+      <li class="trial-card">
+        <span class="trial-card__title">{{ trial.briefTitle }}</span>
+        <button
+          class="favorite-button"
+          (click)="favoritesState.toggleFavorite(trial)"
+          [attr.aria-pressed]="isFavorited(trial.nctId)"
+          [attr.aria-label]="
+            (isFavorited(trial.nctId) ? 'Remove ' : 'Add ') + trial.briefTitle + ' to favorites'
+          "
+        >
+          {{ isFavorited(trial.nctId) ? '★' : '☆' }}
         </button>
       </li>
     } @empty {
-      <li>No trials found.</li>
+      <li class="trial-card">No trials found.</li>
     }
   </ul>
   <div #scrollSentinel class="scroll-sentinel"></div>
