@@ -19,9 +19,17 @@
 } @else if (state.error() && state.trials().length === 0) {
   <p>Something went wrong: {{ state.error()?.message }}</p>
 } @else {
+  @if (favoritesState.error()) {
+    <p>{{ favoritesState.error()?.message }}</p>
+  }
   <ul>
     @for (trial of state.trials(); track trial.nctId) {
-      <li>{{ trial.briefTitle }}</li>
+      <li>
+        {{ trial.briefTitle }}
+        <button (click)="favoritesState.toggleFavorite(trial)">
+          {{ favoritesState.favoriteIds().has(trial.nctId) ? '★' : '☆' }}
+        </button>
+      </li>
     } @empty {
       <li>No trials found.</li>
     }

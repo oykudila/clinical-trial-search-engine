@@ -2,6 +2,7 @@ import { Component, effect, ElementRef, inject, OnDestroy, signal, viewChild } f
 
 import { TrialsState } from '../../core/trials-state';
 import { OVERALL_STATUSES, OverallStatus, Phase, PHASES } from '../../core/models/trial.model';
+import { FavoritesState } from '../../core/favorites-state';
 
 @Component({
   imports: [],
@@ -11,6 +12,7 @@ import { OVERALL_STATUSES, OverallStatus, Phase, PHASES } from '../../core/model
 })
 export class TrialList implements OnDestroy {
   protected state = inject(TrialsState);
+  protected favoritesState = inject(FavoritesState);
 
   // --- search ---
   protected searchInput(event: Event): void {
