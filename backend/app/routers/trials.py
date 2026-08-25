@@ -17,7 +17,11 @@ router = APIRouter(prefix="/trials", tags=["trials"])
         502: {
             "model": ApiError,
             "description": "ClinicalTrials.gov is unavailable or returned invalid data",
-        }
+        },
+        503: {
+            "model": ApiError,
+            "description": "ClinicalTrials.gov is rate-limiting requests",
+        },
     },
 )
 async def list_trials(

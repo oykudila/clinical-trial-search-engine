@@ -21,7 +21,11 @@ router = APIRouter(prefix="/favorites", tags=["favorites"])
         502: {
             "model": ApiError,
             "description": "ClinicalTrials.gov is unavailable or returned invalid data",
-        }
+        },
+        503: {
+            "model": ApiError,
+            "description": "ClinicalTrials.gov is rate-limiting requests",
+        },
     },
 )
 async def get_favorites(
@@ -45,11 +49,15 @@ async def get_favorites(
     "",
     status_code=201,
     responses={
-        201: {"description": "Favourite created. No response body."},
+        201: {"description": "Favorite created. No response body."},
         404: {"model": ApiError, "description": "The trial could not be found"},
         502: {
             "model": ApiError,
             "description": "ClinicalTrials.gov is unavailable or returned invalid data",
+        },
+        503: {
+            "model": ApiError,
+            "description": "ClinicalTrials.gov is rate-limiting requests",
         },
     },
 )
@@ -73,7 +81,7 @@ async def create_favorite(
     status_code=204,
     responses={
         204: {
-            "description": "Favourite either removed or was already not favourited. No response body."
+            "description": "Favorite either removed or was already not favorited. No response body."
         }
     },
 )
