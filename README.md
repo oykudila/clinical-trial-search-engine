@@ -1,5 +1,3 @@
-# myTomorrows Assignment 2
-
 ## Steps for running the app
 
 ### **Backend** (from `backend/`):
